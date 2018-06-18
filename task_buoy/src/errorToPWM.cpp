@@ -6,11 +6,12 @@
 #include <string>
 #include <errorToPWM.h>
 
-ErrorDescriptor::ErrorDescriptor(std::string _name): p_(2.4), i_(0), d_(0.5),
+ErrorDescriptor::ErrorDescriptor(std::string _name): p_(0), i_(0), d_(0),
     band_(1), seed_(0), error_(0), reference_value_(0), previous_value_(0), pwm_(0), previous_time_stamp_(0), 
     present_time_stamp_(0)
 {   
     this->name_ = _name;
+    std::cout << this->name_ << "type ErrorDecriptor is constructed." << std::endl;
 }
 
 ErrorDescriptor::~ErrorDescriptor() {}
@@ -25,6 +26,7 @@ void ErrorDescriptor::setPID(float new_p, float new_i, float new_d, float new_ba
 
 void ErrorDescriptor::setReference(double _value) {
     this->reference_value_ = _value;
+    std::cout << this->name_ << " Reference set to: " << this->reference_value_ << std::endl;
 }
 
 void ErrorDescriptor::setType(std::string _name) {
@@ -65,7 +67,7 @@ void ErrorDescriptor::errorToPWM(double _current_value) {
             this->error_ = this->error_value_;
     }
 
-    std::cout << "ERROR: " << this->error_ << std::endl;
+    std::cout << this->name_ << " ERROR: " << this->error_ << std::endl;
     integral += (this->error_ * dt);
     derivative = (_current_value - this->previous_value_) / dt;
     double output = (this->p_ * this->error_) + (this->i_ * integral) + (this->d_ * derivative);
