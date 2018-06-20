@@ -133,6 +133,7 @@ int main(int argc, char *argv[])
 
   while (ros::ok())
   {
+    double start = ros::Time::now().toSec();
     // std_msgs::Float64MultiArray array;
     geometry_msgs::PointStamped point_coord;
     loop_rate.sleep();
@@ -165,33 +166,31 @@ int main(int argc, char *argv[])
     // convert back to RGB
     cv::cvtColor(lab_image, image_clahe, CV_Lab2BGR);
     
-    for (int i=0; i < 6; i++)
+    for (int i=0; i < 4; i++)
     {
       bilateralFilter(image_clahe, dstx, 6, 8, 8);
       bilateralFilter(dstx, image_clahe, 6, 8, 8);
     }
     
-    image_clahe.copyTo(balanced_image1);
-    balance_white(balanced_image1);
+    balance_white(image_clahe);
     
     for (int i=0; i < 2; i++)
     {
-      bilateralFilter(balanced_image1, dstx, 6, 8, 8);
-      bilateralFilter(dstx, balanced_image1, 6, 8, 8);
+      bilateralFilter(image_clahe, dstx, 6, 8, 8);
+      bilateralFilter(dstx, image_clahe, 6, 8, 8);
     }
 
-    cv::inRange(balanced_image1, bgr_min, bgr_max, thresholded);
+    cv::inRange(image_clahe, bgr_min, bgr_max, thresholded);
     
     cv::dilate(thresholded, thresholded, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
     cv::dilate(thresholded, thresholded, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
     cv::dilate(thresholded, thresholded, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)));
 
-    sensor_msgs::ImagePtr msg2 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", balanced_image1).toImageMsg();
+    sensor_msgs::ImagePtr msg2 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image_clahe).toImageMsg();
     sensor_msgs::ImagePtr msg3 = cv_bridge::CvImage(std_msgs::Header(), "mono8", thresholded).toImageMsg();
 
     pub2.publish(msg2);
     pub3.publish(msg3);
-
 
     if (1)
     {
@@ -387,6 +386,9 @@ int main(int argc, char *argv[])
     {
       ros::spinOnce();
     }
+    double end = ros::Time::now().toSec();
+
+    std::cerr << "Time: " << end - start << std::endl;
   }
   return 0;
 }
