@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(task_buoy)
+project(action_servers)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,10 +8,13 @@ project(task_buoy)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  actionlib
+  actionlib_msgs
+  geometry_msgs
+  message_generation
   roscpp
   rospy
   std_msgs
-  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -62,17 +65,13 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(DIRECTORY action FILES upwardPID.action anglePID.action forwardPID.action sidewardPID.action)
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  actionlib_msgs geometry_msgs std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -105,8 +104,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES task_buoy
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+#  LIBRARIES action_servers
+CATKIN_DEPENDS actionlib actionlib_msgs geometry_msgs message_generation roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -120,11 +119,12 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   include/
+  ../task_buoy/include/
 )
 
 ## Declare a C++ library
-add_library(errorToPWM SHARED src/errorToPWM.cpp include/errorToPWM.h)
-target_link_libraries(errorToPWM ${catkin_LIBRARIES})
+add_library(targetManager SHARED src/targetManager.cpp include/targetManager.h)
+target_link_libraries(targetManager ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -134,17 +134,17 @@ target_link_libraries(errorToPWM ${catkin_LIBRARIES})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(task_buoy src/main.cpp)
-target_link_libraries(task_buoy errorToPWM ${catkin_LIBRARIES})
+add_library(upwardPIDServer SHARED src/upward_PID_server.cpp include/upward_PID_server.h)
+target_link_libraries(upwardPIDServer targetManager errorToPWM ${catkin_LIBRARIES})
 
-add_executable(orange_buoy src/orangebuoy.cpp)
-target_link_libraries(orange_buoy targetManager errorToPWM ${catkin_LIBRARIES})
+add_library(anglePIDServer SHARED src/angle_PID_server.cpp include/angle_PID_server.h)
+target_link_libraries(anglePIDServer targetManager errorToPWM ${catkin_LIBRARIES})
 
-add_executable(yellow_buoy src/yellowbuoy.cpp)
-target_link_libraries(yellow_buoy errorToPWM targetManager ${catkin_LIBRARIES})
+add_library(forwardPIDServer SHARED src/forward_PID_server.cpp include/forward_PID_server.h)
+target_link_libraries(forwardPIDServer targetManager errorToPWM ${catkin_LIBRARIES})
 
-add_executable(green_buoy src/greenbuoy.cpp)
-target_link_libraries(green_buoy errorToPWM targetManager ${catkin_LIBRARIES})
+add_library(sidewardPIDServer SHARED src/sideward_PID_server.cpp include/sideward_PID_server.h)
+target_link_libraries(sidewardPIDServer targetManager errorToPWM ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -201,7 +201,7 @@ target_link_libraries(green_buoy errorToPWM targetManager ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_task_buoy.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_action_servers.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
