@@ -15,7 +15,8 @@ class forwardPIDAction
 protected:
 
     ros::NodeHandle nh_;
-    actionlib::SimpleActionServer<action_servers::forwardPIDAction> as_; // NodeHandle instance must be created before this line. Otherwise strange error occurs.
+    actionlib::SimpleActionServer<action_servers::forwardPIDAction> as_; // NodeHandle instance must be created before this line. 
+                                                                         // Otherwise strange error occurs.
     std::string action_name_;
     // create messages that are used to published feedback/result
     action_servers::forwardPIDFeedback feedback_;
