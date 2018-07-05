@@ -29,10 +29,8 @@ upwardPIDAction::~upwardPIDAction(void)
 
 void upwardPIDAction::goalCB()
 {
-    bool success = true;
-
+    std::cout << "hey, what's up" << std::endl;
     goal_ = as_.acceptNewGoal()->target_depth;
-
     z_coord.setReference(goal_);
 
     // publish info to the console for the user
@@ -55,14 +53,13 @@ void upwardPIDAction::sensorCB(const std_msgs::Float32ConstPtr& msg)
     z_coord.errorToPWM(msg->data);
 
     feedback_.current_depth = msg->data;
-
     as_.publishFeedback(feedback_);
 
-    if (msg->data == goal_) {
-        ROS_INFO("%s: Succeeded", action_name_.c_str());
-        // set the action state to succeeded
-        as_.setSucceeded(result_);
-    }
+    // if (msg->data == goal_) {
+    //     ROS_INFO("%s: Succeeded", action_name_.c_str());
+    //     // set the action state to succeeded
+    //     as_.setSucceeded(result_);
+    // }
 
     nh_.setParam("/pwm_upward_front", z_coord.getPWM());
     nh_.setParam("/pwm_upward_back", z_coord.getPWM());
@@ -75,7 +72,6 @@ void upwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) {
     z_coord.errorToPWM(msg->point.z);
 
     feedback_.current_depth = msg->point.z;
-
     as_.publishFeedback(feedback_);
 
     // if (msg->point.z == goal_) {

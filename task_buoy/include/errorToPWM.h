@@ -1,4 +1,7 @@
 // Copyright 2018 AUV-IITK
+#ifndef ERRORDESCRIPTOR_H
+#define ERRORDESCRIPTOR_H
+
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
@@ -36,3 +39,4 @@ class ErrorDescriptor {
     public: int getPWM();
     public: double getCurrentValue();
 };
+#endif // !ERRORDESCRIPTOR_H

@@ -24,7 +24,6 @@ sidewardPIDAction::~sidewardPIDAction(void)
 void sidewardPIDAction::goalCB()
 {
     goal_ = as_.acceptNewGoal()->target_distance;
-
     y_coord.setReference(goal_);
 
     // publish info to the console for the user
@@ -45,7 +44,6 @@ void sidewardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg)
     y_coord.errorToPWM(msg->point.y);
 
     feedback_.current_distance = msg->point.y;
-
     as_.publishFeedback(feedback_);
 
     // if (msg->point.y == goal_) {

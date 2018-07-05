@@ -11,7 +11,7 @@ ErrorDescriptor::ErrorDescriptor(std::string _name): p_(0), i_(0), d_(0),
     present_time_stamp_(0)
 {   
     this->name_ = _name;
-    std::cout << this->name_ << "type ErrorDecriptor is constructed." << std::endl;
+    std::cout << this->name_ << " type ErrorDecriptor is constructed." << std::endl;
 }
 
 ErrorDescriptor::~ErrorDescriptor() {}
