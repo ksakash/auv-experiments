@@ -4,7 +4,7 @@
 
 class buoy {
 public:
-    buoy();
+    buoy(double);
     ~buoy();
     void setActive(bool);
 

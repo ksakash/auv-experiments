@@ -14,6 +14,11 @@ protected:
 
     ros::NodeHandle nh;
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;
+    ros::Publisher sidewardFrontPublisher;
+    ros::Publisher sidewardBackPublisher;
+
+    std_msgs::Int32 pwm_sideward_back;
+    std_msgs::Int32 pwm_sideward_front;
     
     action_servers::anglePIDGoal angle_PID_goal;
 

@@ -16,16 +16,19 @@ protected:
 
     ros::NodeHandle nh;
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;
-    actionlib::SimpleActionClient<action_servers::sidewardPIDAction> sidewardPIDClient;
+    ros::Publisher forwardRightPublisher;
+    ros::Publisher forwardLeftPublisher;
+
+    std_msgs::Int32 pwm_forward_left;
+    std_msgs::Int32 pwm_forward_right;
     
     action_servers::anglePIDGoal angle_PID_goal;
-    action_servers::sidewardPIDGoal sideward_PID_goal;
 
     double angle;
 
 public:
 
-    moveStraight(double);
+    moveStraight(double, int);
     ~moveStraight();
 
     void setActive(bool);

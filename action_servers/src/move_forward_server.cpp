@@ -1,13 +1,17 @@
 #include <move_forward_server.h>
 
-moveForward::moveForward(double angle_) {
+moveForward::moveForward(double angle_, int pwm_) {
     boost::thread spin_thread(&spinThread);
     angle = angle_;
-    ros::init("moveForward");
+
+    pwm_forward_left.data = pwm_;
+    pwm_forward_right.data = pwm_;
+
+    forwardRightPublisher = nh.advertise<std_msgs::Int32>("/pwm/forwardRight", 1000);
+    forwardLeftPublisher = nh.advertise<std_msgs::Int32>("/pwm/forwardLeft", 1000);
 }
 
 moveForward::~moveForward() {
-    ros::shutdown();
     spin_thread().join();
 }
 
@@ -43,5 +47,7 @@ void moveForward::setActive(bool status) {
 }   
 
 void moveForward::spinThread() {
+    forwardRightPublisher.publish(pwm_forward_right);
+    forwardLeftPublisher.publish(pwm_forward_left);
     ros::spin();
 }

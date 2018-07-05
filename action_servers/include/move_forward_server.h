@@ -21,11 +21,17 @@ protected:
     action_servers::upwardPIDGoal upward_PID_goal;
     action_servers::anglePIDGoal angle_PID_goal;
 
+    ros::Publisher forwardRightPublisher;
+    ros::Publisher forwardLeftPublisher;
+
+    std_msgs::Int32 pwm_forward_left;
+    std_msgs::Int32 pwm_forward_right;
+
     double angle;
 
 public:
 
-    moveForward(double);
+    moveForward(double, int pwm_);
     ~moveForward();
 
     void setActive(bool);

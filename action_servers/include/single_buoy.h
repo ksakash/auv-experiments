@@ -11,7 +11,7 @@
 
 class singleBuoy {
 public:
-    singleBuoy();
+    singleBuoy(double);
     ~singleBuoy();
     void setActive(bool);
     void forwardCB(geometry_msgs::PointStampedConstPtr &_msg);

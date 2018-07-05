@@ -1,6 +1,6 @@
 #include <single_buoy.h>
 
-singleBuoy::singleBuoy() {
+singleBuoy::singleBuoy(double angle): move_forward_(angle, 150), move_sideward_(angle, 100), move_straight_(angle, 100) {
     sub_ = nh_.subscribe("/buoy_task/buoy_coordinates", 1, &singleBuoy::fowardCB, this);
 }
 singleBuoy::~singleBuoy() {}

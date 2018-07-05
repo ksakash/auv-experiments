@@ -1,8 +1,14 @@
 #include <straight_server.h>
 
-moveStraight::moveStraight(double angle_) {
+moveStraight::moveStraight(double angle_, int pwm_) {
     boost::thread spin_thread(&spinThread);
     angle = angle_;
+
+    forwardRightPublisher = nh.advertise<std_msgs::Int32>("/pwm/forwardRight", 1000);
+    forwardLeftPublisher = nh.advertise<std_msgs::Int32>("/pwm/forwardLeft", 1000);
+
+    pwm_forward_left.data = pwm_;
+    pwm_forward_right.data = pwm_;
 }
 
 moveStraight::~moveStraight() {
@@ -17,21 +23,15 @@ void moveStraight::setActive(bool status) {
         ROS_INFO("anglePID server started, sending goal.");
         angle_PID_goal.target_angle = angle;
         anglePIDClient.sendGoal(angle_PID_goal);
-
-        ROS_INFO("Waiting for sidewardPID server to start.");
-        sidewardPIDClient.waitForServer();
-
-        ROS_INFO("sidewardPID server started, sending goal.");
-        sideward_PID_goal.target_distance = std::numeric_limits<float>::infinity();
-        sidewardPIDClient.sendGoal(sideward_PID_goal);
     }
 
     if (status == false) {
         anglePIDClient.cancel_goal();
-        sidewardPIDClient.cancel_goal();
     }
 }   
 
 void moveStraight::spinThread() {
+    forwardLeftPublisher.publish(pwm_forward_left);
+    forwardRightPublisher.publish(pwm_forward_right);
     ros::spin();
 }
