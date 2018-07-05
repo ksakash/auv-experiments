@@ -23,17 +23,11 @@ protected:
     action_servers::forwardPIDResult result_;
     double goal_;
     ros::Subscriber sub_;
-    ros::Publisher forwardLeftPublisher;
-    ros::Publisher forwardRightPublisher;
     ErrorDescriptor x_coord;
-
-    std_msgs::Int32 pwm_forward_left;
-    std_msgs::Int32 pwm_forward_right;
-    std::string type;
 
 public:
 
-    forwardPIDAction(std::string, std::string);
+    forwardPIDAction(std::string);
     ~forwardPIDAction();
     void goalCB();
     void preemptCB();

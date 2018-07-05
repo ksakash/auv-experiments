@@ -20,9 +20,6 @@ upwardPIDAction::upwardPIDAction(std::string name, std::string type_) :
         sub_ = nh_.subscribe("/vision/sensors/depth", 1, &upwardPIDAction::sensorCB, this);
     }
 
-    upwardFrontPublisher = nh_.advertise<std_msgs::Int32>("/pwm/upwardFront", 1000);
-    upwardBackPublisher = nh_.advertise<std_msgs::Int32>("/pwm/upwardBack", 1000);
-
     as_.start();
 }
 
@@ -32,8 +29,6 @@ upwardPIDAction::~upwardPIDAction(void)
 
 void upwardPIDAction::goalCB()
 {
-    // helper variables
-    ros::Rate r(1);
     bool success = true;
 
     goal_ = as_.acceptNewGoal()->target_depth;
@@ -69,11 +64,8 @@ void upwardPIDAction::sensorCB(const std_msgs::Float32ConstPtr& msg)
         as_.setSucceeded(result_);
     }
 
-    pwm_upward_back.data = z_coord.getPWM();
-    pwm_upward_front.data = z_coord.getPWM();
-
-    upwardFrontPublisher.publish(pwm_upward_back);
-    upwardBackPublisher.publish(pwm_upward_front);
+    nh_.setParam("/pwm_upward_front", z_coord.getPWM());
+    nh_.setParam("/pwm_upward_back", z_coord.getPWM());
 }
 
 void upwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) {
@@ -92,10 +84,7 @@ void upwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) {
         as_.setSucceeded(result_);
     }
 
-    pwm_upward_back.data = z_coord.getPWM();
-    pwm_upward_front.data = z_coord.getPWM();
-
-    upwardFrontPublisher.publish(pwm_upward_back);
-    upwardBackPublisher.publish(pwm_upward_front);        
+    nh_.setParam("/pwm_upward_front", z_coord.getPWM());
+    nh_.setParam("/pwm_upward_back", z_coord.getPWM());
 }
 

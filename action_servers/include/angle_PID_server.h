@@ -8,7 +8,6 @@
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
 #include <string>
-#include "std_msgs/Float64MultiArray.h"
 
 class anglePIDAction
 {
@@ -22,12 +21,8 @@ protected:
     action_servers::anglePIDResult result_;
     double goal_;
     ros::Subscriber sub_;
-    ros::Publisher sidewardFrontPublisher;
-    ros::Publisher sidewardBackPublisher;
     ErrorDescriptor angle;
 
-    std_msgs::Int32 pwm_sideward_front;
-    std_msgs::Int32 pwm_sideward_back;
     std::string type;
 
 public:

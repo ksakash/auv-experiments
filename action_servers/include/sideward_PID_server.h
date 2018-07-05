@@ -22,17 +22,11 @@ protected:
     action_servers::sidewardPIDResult result_;
     double goal_;
     ros::Subscriber sub_;
-    ros::Publisher sidewardFrontPublisher;
-    ros::Publisher sidewardBackPublisher;
     ErrorDescriptor y_coord;
-
-    std_msgs::Int32 pwm_sideward_front;
-    std_msgs::Int32 pwm_sideward_back;
-    std::string type;
 
 public:
 
-    sidewardPIDAction(std::string, std::string);
+    sidewardPIDAction(std::string);
     ~sidewardPIDAction();
     void goalCB();
     void preemptCB();

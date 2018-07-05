@@ -1,6 +1,6 @@
 #include <forward_PID_server.h>
 
-forwardPIDAction::forwardPIDAction(std::string name, std::string type_) :
+forwardPIDAction::forwardPIDAction(std::string name) :
     as_(nh_, name, false),
     action_name_(name), x_coord("X_COORD")
 {
@@ -9,14 +9,10 @@ forwardPIDAction::forwardPIDAction(std::string name, std::string type_) :
     as_.registerPreemptCallback(boost::bind(&forwardPIDAction::preemptCB, this));
     goal_ = 0;
 
-    type = type_;
     x_coord.setPID(7.5, 0, 2, 10);
     
     //subscribe to the data topic of interest
     sub_ = nh_.subscribe("/buoy_task/buoy_coordinates", 1, &forwardPIDAction::visionCB, this);
-
-    forwardRightPublisher = nh_.advertise<std_msgs::Int32>("/pwm/forwardRight", 1000);
-    forwardLeftPublisher = nh_.advertise<std_msgs::Int32>("/pwm/forwardLeft", 1000);
 
     as_.start();
 }
@@ -62,10 +58,7 @@ void forwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) 
         as_.setSucceeded(result_);
     }
 
-    pwm_forward_right.data = x_coord.getPWM();
-    pwm_forward_left.data = x_coord.getPWM();
-
-    forwardLeftPublisher.publish(pwm_forward_left);
-    forwardRightPublisher.publish(pwm_forward_right);        
+    nh_.setParam("/pwm_forward_right", x_coord.getPWM());
+    nh_.setParam("/pwm_forward_left", x_coord.getPWM());
 }
 

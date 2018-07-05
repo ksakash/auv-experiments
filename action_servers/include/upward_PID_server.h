@@ -7,7 +7,6 @@
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
 #include <string>
-#include "std_msgs/Float64MultiArray.h"
 
 class upwardPIDAction
 {
@@ -21,12 +20,8 @@ protected:
     action_servers::upwardPIDResult result_;
     double goal_;
     ros::Subscriber sub_;
-    ros::Publisher upwardFrontPublisher;
-    ros::Publisher upwardBackPublisher;
     ErrorDescriptor z_coord; // z_coord for forward direction
 
-    std_msgs::Int32 pwm_upward_front;
-    std_msgs::Int32 pwm_upward_back;
     std::string type;
 
 public:

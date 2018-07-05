@@ -20,9 +20,6 @@ anglePIDAction::anglePIDAction(std::string name, std::string type_) :
         sub_ = nh_.subscribe("/vision/sensors/depth", 1, &anglePIDAction::sensorCB, this);
     }
 
-    sidewardFrontPublisher = nh_.advertise<std_msgs::Int32>("/pwm/sidewardFront", 1000);
-    sidewardBackPublisher = nh_.advertise<std_msgs::Int32>("/pwm/sidewardBack", 1000);
-
     as_.start();
 }
 
@@ -32,10 +29,6 @@ anglePIDAction::~anglePIDAction(void)
 
 void anglePIDAction::goalCB()
 {
-    // helper variables
-    ros::Rate r(1);
-    bool success = true;
-
     goal_ = as_.acceptNewGoal()->target_angle;
 
     angle.setReference(goal_);
@@ -68,11 +61,8 @@ void anglePIDAction::sensorCB(const std_msgs::Float32ConstPtr& msg)
         as_.setSucceeded(result_);
     }
 
-    pwm_sideward_back.data = -1*angle.getPWM();
-    pwm_sideward_front.data = angle.getPWM();
-
-    sidewardFrontPublisher.publish(pwm_sideward_back);
-    sidewardBackPublisher.publish(pwm_sideward_front);
+    nh_.setParam("/pwm_sideward_front_turn", angle.getPWM());
+    nh_.setParam("/pwm_sideward_back_turn", -1*angle.getPWM());
 }
 
 void anglePIDAction::visionCB(const geometry_msgs::Pose2DConstPtr &msg) {
@@ -91,10 +81,7 @@ void anglePIDAction::visionCB(const geometry_msgs::Pose2DConstPtr &msg) {
         as_.setSucceeded(result_);
     }
 
-    pwm_sideward_back.data = -1*angle.getPWM();
-    pwm_sideward_front.data = angle.getPWM();
-
-    sidewardFrontPublisher.publish(pwm_sideward_back);
-    sidewardBackPublisher.publish(pwm_sideward_front);        
+    nh_.setParam("/pwm_sideward_front_turn", angle.getPWM());
+    nh_.setParam("/pwm_sideward_back_turn", -1*angle.getPWM());
 }
 
