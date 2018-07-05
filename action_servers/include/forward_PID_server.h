@@ -1,3 +1,6 @@
+#ifndef FORWARD_PID_SERVER_H
+#define FORWARD_PID_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
 #include <action_servers/forwardPIDAction.h>
@@ -33,3 +36,4 @@ public:
     void visionCB(const geometry_msgs::PointStampedConstPtr&);
 
 };
+#endif 

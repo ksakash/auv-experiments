@@ -1,3 +1,6 @@
+#ifndef UPWARD_PID_SERVER_H
+#define UPWARD_PID_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
 #include <action_servers/upwardPIDAction.h>
@@ -34,3 +37,4 @@ public:
     void visionCB(const geometry_msgs::PointStampedConstPtr&);
 
 };
+#endif // UPWARD_PID_SERVER_H

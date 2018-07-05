@@ -155,6 +155,12 @@ target_link_libraries(moveSideward ${catkin_LIBRARIES})
 add_library(moveStraight SHARED src/straight_server.cpp include/straight_server.h)
 target_link_libraries(moveStraight ${catkin_LIBRARIES})
 
+add_library(singleBuoy  SHARED src/single_buoy.cpp include/single_buoy.h)
+target_link_libraries(singleBuoy moveStraight moveForward moveSideward ${catkin_LIBRARIES})
+
+add_library(Buoy SHARED src/buoy.cpp include/buoy.h)
+target_link_libraries(Buoy singleBuoy moveSideward ${catkin_LIBRARIES})
+
 add_executable(pwm_publisher src/pwm_publisher.cpp)
 target_link_libraries(pwm_publisher ${catkin_LIBRARIES})
 

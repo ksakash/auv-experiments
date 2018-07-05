@@ -1,3 +1,6 @@
+#ifndef MOVE_FORWARD_SERVER_H
+#define MOVE_FORWARD_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -40,3 +43,4 @@ public:
     void setActive(bool);
     void spinThread();
 };
+#endif // MOVE_FORWARD_SERVER_H

@@ -1,3 +1,6 @@
+#ifndef MOVE_SIDEWARD_SERVER_H
+#define MOVE_SIDEWARD_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <action_servers/anglePIDAction.h>
@@ -16,7 +19,6 @@ protected:
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;    
     action_servers::anglePIDGoal angle_PID_goal;
     double angle;
-
     boost::thread* spin_thread;
 
 public:
@@ -27,3 +29,4 @@ public:
     void setActive(bool);
     void spinThread();
 };
+#endif // MOVE_SIDEWARD_SERVER_H

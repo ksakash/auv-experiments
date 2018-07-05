@@ -1,3 +1,6 @@
+#ifndef MOVE_SIDEWARD_SERVER_H
+#define MOVE_SIDEWARD_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
 #include <action_servers/sidewardPIDAction.h>
@@ -32,3 +35,4 @@ public:
     void visionCB(const geometry_msgs::PointStampedConstPtr&);
 
 };
+#endif // MOVE_SIDEWARD_SERVER_H

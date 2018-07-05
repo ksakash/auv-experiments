@@ -1,11 +1,11 @@
 #include <single_buoy.h>
 
-singleBuoy::singleBuoy(double angle): move_forward_(angle, 150), move_sideward_(angle, 100), move_straight_(angle, 100) {
-    sub_ = nh_.subscribe("/buoy_task/buoy_coordinates", 1, &singleBuoy::fowardCB, this);
+singleBuoy::singleBuoy(double angle): move_forward_(angle, 150), move_sideward_(angle, 100), move_straight_(angle, 100), forwardPIDClient("forwardPID") {
+    sub_ = nh_.subscribe("/buoy_task/buoy_coordinates", 1, &singleBuoy::forwardCB, this);
 }
 singleBuoy::~singleBuoy() {}
 
-singleBuoy::setActive(bool status) {
+void singleBuoy::setActive(bool status) {
     move_forward_.setActive(true);
 
     while(forward_distance_ >= 60) {
@@ -21,12 +21,12 @@ singleBuoy::setActive(bool status) {
     move_straight_.setActive(false);
 
     ROS_INFO("Waiting for action server to start.");
-    ac.waitForServer();
+    forwardPIDClient.waitForServer();
 
     ROS_INFO("Action server started, sending goal.");
     // send a goal to the action
     action_servers::forwardPIDGoal goal;
-    goal.forward_distance = 100;
+    goal.target_distance = 100;
     forwardPIDClient.sendGoal(goal);
 
     bool finished_before_timeout = forwardPIDClient.waitForResult(ros::Duration(15.0));
@@ -41,6 +41,6 @@ singleBuoy::setActive(bool status) {
 
 }
 
-singleBuoy::forwardCB(geometry_msgs::PointStampedConstPtr &_msg) {
+void singleBuoy::forwardCB(const geometry_msgs::PointStamped::ConstPtr &_msg) {
     forward_distance_ = _msg->point.x;
 }

@@ -1,20 +1,30 @@
-#include <ros.h>
+#ifndef SINGLE_BUOY_H
+#define SINGLE_BUOY_H
+
+#include <ros/ros.h>
+
+#include <action_servers/forwardPIDAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <actionlib/client/terminal_state.h>
+
+#include <geometry_msgs/PointStamped.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
-#include <string>
+
 #include <boost/thread.hpp>
+#include <string>
+
 #include <move_forward_server.h>
 #include <move_sideward_server.h>
 #include <straight_server.h>
-#include <forward_PID_server.h>
 
 class singleBuoy {
 public:
     singleBuoy(double);
     ~singleBuoy();
     void setActive(bool);
-    void forwardCB(geometry_msgs::PointStampedConstPtr &_msg);
+    void forwardCB(const geometry_msgs::PointStamped::ConstPtr &_msg);
 
 private:
     actionlib::SimpleActionClient<action_servers::forwardPIDAction> forwardPIDClient;
@@ -24,4 +34,5 @@ private:
     ros::Subscriber sub_;
     ros::NodeHandle nh_;
     double forward_distance_;
-}
+};
+#endif // SINGLE_BUOY_H

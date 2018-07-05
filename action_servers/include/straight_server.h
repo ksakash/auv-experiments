@@ -1,3 +1,6 @@
+#ifndef STRAIGHT_SERVER_H
+#define STRAIGHT_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <action_servers/anglePIDAction.h>
@@ -28,3 +31,4 @@ public:
     void setActive(bool);
     void spinThread();
 };
+#endif // STRAIGHT_SERVER_H

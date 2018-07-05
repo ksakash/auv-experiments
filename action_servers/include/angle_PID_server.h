@@ -1,3 +1,6 @@
+#ifndef ANGLE_PID_SERVER_H
+#define ANGLE_PID_SERVER_H
+
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
 #include <action_servers/anglePIDAction.h>
@@ -35,3 +38,4 @@ public:
     void visionCB(const geometry_msgs::Pose2DConstPtr&);
 
 };
+#endif // !ANGLE_PID_SERVER_H
