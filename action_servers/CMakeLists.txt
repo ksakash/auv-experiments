@@ -146,6 +146,9 @@ target_link_libraries(forwardPIDServer targetManager errorToPWM ${catkin_LIBRARI
 add_library(sidewardPIDServer SHARED src/sideward_PID_server.cpp include/sideward_PID_server.h)
 target_link_libraries(sidewardPIDServer targetManager errorToPWM ${catkin_LIBRARIES})
 
+add_executable(pwm_publisher src/pwm_publisher.cpp)
+target_link_libraries(pwm_publisher ${catkin_LIBRARIES})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
