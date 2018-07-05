@@ -23,10 +23,6 @@ forwardPIDAction::~forwardPIDAction(void)
 
 void forwardPIDAction::goalCB()
 {
-    // helper variables
-    ros::Rate r(1);
-    bool success = true;
-
     goal_ = as_.acceptNewGoal()->target_distance;
 
     x_coord.setReference(goal_);
@@ -52,11 +48,11 @@ void forwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) 
 
     as_.publishFeedback(feedback_);
 
-    if (msg->point.x == goal_) {
-        ROS_INFO("%s: Succeeded", action_name_.c_str());
-        // set the action state to succeeded
-        as_.setSucceeded(result_);
-    }
+    // if (msg->point.x == goal_) {
+    //     ROS_INFO("%s: Succeeded", action_name_.c_str());
+    //     // set the action state to succeeded
+    //     as_.setSucceeded(result_);
+    // }
 
     nh_.setParam("/pwm_forward_right", x_coord.getPWM());
     nh_.setParam("/pwm_forward_left", x_coord.getPWM());

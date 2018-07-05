@@ -18,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -119,7 +119,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   include/
-  ../task_buoy/include/
+  ../task_buoy/include
 )
 
 ## Declare a C++ library
@@ -145,6 +145,15 @@ target_link_libraries(forwardPIDServer targetManager errorToPWM ${catkin_LIBRARI
 
 add_library(sidewardPIDServer SHARED src/sideward_PID_server.cpp include/sideward_PID_server.h)
 target_link_libraries(sidewardPIDServer targetManager errorToPWM ${catkin_LIBRARIES})
+
+add_library(moveForward SHARED src/move_forward_server.cpp include/move_forward_server.h)
+target_link_libraries(moveForward ${catkin_LIBRARIES})
+
+add_library(moveSideward SHARED src/move_sideward_server.cpp include/move_sideward_server.h)
+target_link_libraries(moveSideward ${catkin_LIBRARIES})
+
+add_library(moveStraight SHARED src/straight_server.cpp include/straight_server.h)
+target_link_libraries(moveStraight ${catkin_LIBRARIES})
 
 add_executable(pwm_publisher src/pwm_publisher.cpp)
 target_link_libraries(pwm_publisher ${catkin_LIBRARIES})

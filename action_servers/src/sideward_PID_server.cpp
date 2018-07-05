@@ -48,11 +48,11 @@ void sidewardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg)
 
     as_.publishFeedback(feedback_);
 
-    if (msg->point.y == goal_) {
-        ROS_INFO("%s: Succeeded", action_name_.c_str());
-        // set the action state to succeeded
-        as_.setSucceeded(result_);
-    }
+    // if (msg->point.y == goal_) {
+    //     ROS_INFO("%s: Succeeded", action_name_.c_str());
+    //     // set the action state to succeeded
+    //     as_.setSucceeded(result_);
+    // }
 
     nh_.setParam("/pwm_sideward_front_straight", y_coord.getPWM());
     nh_.setParam("/pwm_sideward_back_straight", y_coord.getPWM());

@@ -75,11 +75,11 @@ void anglePIDAction::visionCB(const geometry_msgs::Pose2DConstPtr &msg) {
 
     as_.publishFeedback(feedback_);
 
-    if (msg->theta == goal_) {
-        ROS_INFO("%s: Succeeded", action_name_.c_str());
-        // set the action state to succeeded
-        as_.setSucceeded(result_);
-    }
+    // if (msg->theta == goal_) {
+    //     ROS_INFO("%s: Succeeded", action_name_.c_str());
+    //     // set the action state to succeeded
+    //     as_.setSucceeded(result_);
+    // }
 
     nh_.setParam("/pwm_sideward_front_turn", angle.getPWM());
     nh_.setParam("/pwm_sideward_back_turn", -1*angle.getPWM());

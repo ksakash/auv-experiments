@@ -78,11 +78,11 @@ void upwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) {
 
     as_.publishFeedback(feedback_);
 
-    if (msg->point.z == goal_) {
-        ROS_INFO("%s: Succeeded", action_name_.c_str());
-        // set the action state to succeeded
-        as_.setSucceeded(result_);
-    }
+    // if (msg->point.z == goal_) {
+    //     ROS_INFO("%s: Succeeded", action_name_.c_str());
+    //     // set the action state to succeeded
+    //     as_.setSucceeded(result_);
+    // }
 
     nh_.setParam("/pwm_upward_front", z_coord.getPWM());
     nh_.setParam("/pwm_upward_back", z_coord.getPWM());

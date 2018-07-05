@@ -1,18 +1,15 @@
 #include <move_forward_server.h>
 
-moveForward::moveForward(double angle_, int pwm_) {
-    boost::thread spin_thread(&spinThread);
+moveForward::moveForward(double angle_, int pwm_): upwardPIDClient("upwardPID"), anglePIDClient("anglePID"), sidewardPIDClient("sidewardPID") {
+    spin_thread = new boost::thread(boost::bind(&moveForward::spinThread, this));
     angle = angle_;
 
-    pwm_forward_left.data = pwm_;
-    pwm_forward_right.data = pwm_;
-
-    forwardRightPublisher = nh.advertise<std_msgs::Int32>("/pwm/forwardRight", 1000);
-    forwardLeftPublisher = nh.advertise<std_msgs::Int32>("/pwm/forwardLeft", 1000);
+    nh.setParam("/pwm_forward_right", pwm_);
+    nh.setParam("/pwm_forward_left", pwm_);
 }
 
 moveForward::~moveForward() {
-    spin_thread().join();
+    spin_thread->join();
 }
 
 void moveForward::setActive(bool status) {
@@ -28,7 +25,7 @@ void moveForward::setActive(bool status) {
         upwardPIDClient.waitForServer();
 
         ROS_INFO("upwardPID server started, sending goal.");
-        upward_PID_goal.target_height = 0;
+        upward_PID_goal.target_depth = 0;
         upwardPIDClient.sendGoal(upward_PID_goal);
 
         ROS_INFO("Waiting for sidewardPID server to start.");
@@ -40,14 +37,12 @@ void moveForward::setActive(bool status) {
     }
 
     if (status == false) {
-        sidewardPIDClient.cancel_goal();
-        upwardPIDClient.cancel_goal();
-        anglePIDClient.cancel_goal();
+        sidewardPIDClient.cancelGoal();
+        upwardPIDClient.cancelGoal();
+        anglePIDClient.cancelGoal();
     }
 }   
 
 void moveForward::spinThread() {
-    forwardRightPublisher.publish(pwm_forward_right);
-    forwardLeftPublisher.publish(pwm_forward_left);
     ros::spin();
 }
