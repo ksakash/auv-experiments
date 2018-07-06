@@ -57,4 +57,3 @@ void forwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) 
     nh_.setParam("/pwm_forward_right", x_coord.getPWM());
     nh_.setParam("/pwm_forward_left", x_coord.getPWM());
 }
-

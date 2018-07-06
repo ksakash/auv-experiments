@@ -1,6 +1,6 @@
 #include <buoy.h>
 
-buoy::buoy(double angle): move_sideward_(angle, 100), single_buoy_(angle) {}
+buoy::buoy(): move_sideward_(100), single_buoy_() {}
 buoy::~buoy() {}
 
 void buoy::setActive(bool status) {

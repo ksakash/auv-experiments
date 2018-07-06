@@ -1,6 +1,6 @@
 #include <single_buoy.h>
 
-singleBuoy::singleBuoy(double angle): move_forward_(150), move_sideward_(angle, 100), move_straight_(angle, 100), forwardPIDClient("forwardPID") {
+singleBuoy::singleBuoy(): move_forward_(150), move_sideward_(100), move_straight_(100), forwardPIDClient("forwardPID") {
     sub_ = nh_.subscribe("/buoy_task/buoy_coordinates", 1, &singleBuoy::forwardCB, this);
 }
 singleBuoy::~singleBuoy() {}

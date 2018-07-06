@@ -18,15 +18,17 @@ protected:
     ros::NodeHandle nh;
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;    
     action_servers::anglePIDGoal angle_PID_goal;
+    ros::Subscriber sub_;
     double angle;
     boost::thread* spin_thread;
 
 public:
 
-    moveSideward(double, int);
+    moveSideward(int);
     ~moveSideward();
 
     void setActive(bool);
     void spinThread();
+    void imuAngleCB(const std_msgs::Float64Ptr &_msg);
 };
 #endif // MOVE_SIDEWARD_SERVER_H

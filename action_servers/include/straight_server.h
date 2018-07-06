@@ -22,13 +22,15 @@ protected:
     action_servers::anglePIDGoal angle_PID_goal;
     boost::thread* spin_thread;
     double angle;
+    ros::Subscriber sub_;
 
 public:
 
-    moveStraight(double, int);
+    moveStraight(int);
     ~moveStraight();
 
     void setActive(bool);
     void spinThread();
+    void imuAngleCB(const std_msgs::Float64Ptr &_msg);
 };
 #endif // STRAIGHT_SERVER_H

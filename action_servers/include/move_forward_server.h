@@ -23,6 +23,8 @@ protected:
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient_sensor_;
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient_vision_;
     actionlib::SimpleActionClient<action_servers::sidewardPIDAction> sidewardPIDClient_;
+    ros::Subscriber angle_sub_;
+    ros::Subscriber depth_sub_;
 
     action_servers::sidewardPIDGoal sideward_PID_goal;
     action_servers::upwardPIDGoal upward_PID_goal;
@@ -44,5 +46,7 @@ public:
     void setReferenceAngle(double);
     void setReferenceDepth(double);
     void setDataSource(std::string, std::string);
+    void imuAngleCB(const std_msgs::Float64Ptr &_msg);
+    void depthCB(const std_msgs::Float64Ptr &_msg); 
 };
 #endif // MOVE_FORWARD_SERVER_H

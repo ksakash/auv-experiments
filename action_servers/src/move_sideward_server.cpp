@@ -1,12 +1,11 @@
 #include <move_sideward_server.h>
 
-moveSideward::moveSideward(double angle_, int pwm_): anglePIDClient("anglePID") {
+moveSideward::moveSideward(int pwm_): anglePIDClient("anglePID") {
     spin_thread = new boost::thread(boost::bind(&moveSideward::spinThread, this));
+    sub_ = nh.subscribe("/varun/sensors/imu/yaw", 1, &moveSideward::imuAngleCB, this);
     
     nh.setParam("/pwm_sideward_front_straight", pwm_);
     nh.setParam("/pwm_sideward_back_straight", pwm_);
-
-    angle = angle_;
 }
 
 moveSideward::~moveSideward() {
@@ -31,4 +30,8 @@ void moveSideward::setActive(bool status) {
 
 void moveSideward::spinThread() {
     ros::spin();
+}
+
+void moveSideward::imuAngleCB(const std_msgs::Float64Ptr &_msg) {
+    angle = _msg->data;
 }

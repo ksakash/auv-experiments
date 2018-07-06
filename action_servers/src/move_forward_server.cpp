@@ -5,7 +5,8 @@ moveForward::moveForward(int pwm_): upwardPIDClient_sensor_("upwardPID/sensor"),
                                     anglePIDClient_vision_("anglePID/vision")
 {
     spin_thread = new boost::thread(boost::bind(&moveForward::spinThread, this));
-
+    angle_sub_ = nh.subscribe("/varun/sensors/imu/yaw", 1, &moveForward::imuAngleCB, this);
+    depth_sub_ = nh.subscribe("/varun/sensors/depth", 1, &moveForward::depthCB, this);
     nh.setParam("/pwm_forward_right", pwm_);
     nh.setParam("/pwm_forward_left", pwm_);
 }
@@ -45,7 +46,7 @@ void moveForward::setActive(bool status) {
             anglePIDClient_vision_.waitForServer();
 
             ROS_INFO("anglePID server started, sending goal.");
-            angle_PID_goal.target_angle = angle;
+            angle_PID_goal.target_angle = 0;
             anglePIDClient_vision_.sendGoal(angle_PID_goal);
         }
         else if (angle_type_ == "SENSOR") {
@@ -83,4 +84,12 @@ void moveForward::setReferenceDepth(double depth_) {
 void moveForward::setDataSource(std::string angle_type, std::string upward_type) {
     angle_type_ = angle_type;
     upward_type_ = upward_type;
+}
+
+void moveForward::imuAngleCB(const std_msgs::Float64Ptr &_msg) {
+    angle = _msg->data;
+}
+
+void moveForward::depthCB(const std_msgs::Float64Ptr &_msg) {
+    depth = _msg->data;
 }
