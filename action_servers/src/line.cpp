@@ -1,0 +1,56 @@
+#include <line.h>
+
+lineTask::lineTask(double angle_): move_straight_(angle_, 100), sidewardPIDClient("sidewardPID"), anglePIDClient("anglePID"), move_forward_(angle_, 150) {
+    spin_thread = new boost::thread(boost::bind(&moveSideward::spinThread, this));
+    sub_ = nh_.subscribe("/line_task/line_coordinates", 1, &lineTask::angleCB);
+    angle = angle_;
+    move_forward_.setDataSource("VISION", "SENSOR");
+}
+
+lineTask::~lineTask() {
+
+}
+
+void lineTask::setActive(bool value) {
+    if (value) {
+        move_straight_(angle, 100);
+        move_straight_.setActive(true);
+        bool line_detected_signal_ = false;
+        bool target_acheived_ = false;
+        while(!line_detected_signal_) {
+            continue;
+        }
+        move_straight_.setActive(false);
+
+        ROS_INFO("Waiting for sidewardPID server to start.");
+        sidewardPIDClient.waitForServer();
+
+        ROS_INFO("sidewardPID server started, sending goal.");
+        sideward_PID_goal.target_distance = 0;
+        sidewardPIDClient.sendGoal(sideward_PID_goal);
+
+        ROS_INFO("Waiting for anglePID server to start.");
+        anglePIDClient.waitForServer();
+
+        ROS_INFO("anglePID server started, sending goal.");
+        angle_PID_goal.target_distance = 0;
+        anglePIDClient.sendGoal(angle_PID_goal);
+
+        while(!target_acheived_) {
+            continue;
+        }
+        anglePIDClient.cancelGoal();
+        sidewardPIDClient.cancelGoal();
+        move_forward_.setActive(true);
+    }
+    else {
+        move_straight_.setActive(false);
+        anglePIDClient.cancelGoal();
+        sidewardPIDClient.cancelGoal();
+        move_forward_.setActive(false);
+    }
+}
+
+void lineTask::angleCB(const geometry_msgs::Pose2D::ConstPtr &_msg) {
+    angle = _msg->theta;
+}

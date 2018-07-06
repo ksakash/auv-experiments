@@ -1,11 +1,12 @@
 #include <single_buoy.h>
 
-singleBuoy::singleBuoy(double angle): move_forward_(angle, 150), move_sideward_(angle, 100), move_straight_(angle, 100), forwardPIDClient("forwardPID") {
+singleBuoy::singleBuoy(double angle): move_forward_(150), move_sideward_(angle, 100), move_straight_(angle, 100), forwardPIDClient("forwardPID") {
     sub_ = nh_.subscribe("/buoy_task/buoy_coordinates", 1, &singleBuoy::forwardCB, this);
 }
 singleBuoy::~singleBuoy() {}
 
 void singleBuoy::setActive(bool status) {
+    move_forward_.setDataSource("SENSOR", "VISION");
     move_forward_.setActive(true);
 
     while(forward_distance_ >= 60) {
@@ -43,4 +44,5 @@ void singleBuoy::setActive(bool status) {
 
 void singleBuoy::forwardCB(const geometry_msgs::PointStamped::ConstPtr &_msg) {
     forward_distance_ = _msg->point.x;
+    depth_ = _msg->point.z;
 }

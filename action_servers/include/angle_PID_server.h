@@ -36,6 +36,7 @@ public:
     void preemptCB();
     void sensorCB(const std_msgs::Float32ConstPtr&);
     void visionCB(const geometry_msgs::Pose2DConstPtr&);
+    void setDataSource(std::string);
 
 };
 #endif // ANGLE_PID_SERVER_H

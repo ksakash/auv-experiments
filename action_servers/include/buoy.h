@@ -12,7 +12,7 @@ public:
     void setActive(bool);
 
 private:
-    singleBuoy buoy_;
+    singleBuoy single_buoy_;
     moveSideward move_sideward_;
 };
 #endif // BUOY_H

@@ -18,29 +18,31 @@ class moveForward {
 protected:
 
     ros::NodeHandle nh;
-    actionlib::SimpleActionClient<action_servers::upwardPIDAction> upwardPIDClient;
-    actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;
-    actionlib::SimpleActionClient<action_servers::sidewardPIDAction> sidewardPIDClient;
+    actionlib::SimpleActionClient<action_servers::upwardPIDAction> upwardPIDClient_sensor_;
+    actionlib::SimpleActionClient<action_servers::upwardPIDAction> upwardPIDClient_vision_;
+    actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient_sensor_;
+    actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient_vision_;
+    actionlib::SimpleActionClient<action_servers::sidewardPIDAction> sidewardPIDClient_;
 
     action_servers::sidewardPIDGoal sideward_PID_goal;
     action_servers::upwardPIDGoal upward_PID_goal;
     action_servers::anglePIDGoal angle_PID_goal;
 
-    ros::Publisher forwardRightPublisher;
-    ros::Publisher forwardLeftPublisher;
-
-    std_msgs::Int32 pwm_forward_left;
-    std_msgs::Int32 pwm_forward_right;
-
     double angle;
+    double depth;
     boost::thread* spin_thread;
+    std::string upward_type_;
+    std::string angle_type_;
 
 public:
 
-    moveForward(double, int pwm_);
+    moveForward(int pwm_);
     ~moveForward();
 
     void setActive(bool);
     void spinThread();
+    void setReferenceAngle(double);
+    void setReferenceDepth(double);
+    void setDataSource(std::string, std::string);
 };
 #endif // MOVE_FORWARD_SERVER_H

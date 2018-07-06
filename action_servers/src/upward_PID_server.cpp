@@ -84,3 +84,7 @@ void upwardPIDAction::visionCB(const geometry_msgs::PointStampedConstPtr &msg) {
     nh_.setParam("/pwm_upward_back", z_coord.getPWM());
 }
 
+void upwardPIDAction::setDataSource(std::string type_) {
+    type = type_;
+}
+

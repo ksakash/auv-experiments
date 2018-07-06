@@ -34,5 +34,6 @@ private:
     ros::Subscriber sub_;
     ros::NodeHandle nh_;
     double forward_distance_;
+    double depth_;
 };
 #endif // SINGLE_BUOY_H

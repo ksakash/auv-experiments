@@ -35,6 +35,7 @@ public:
     void preemptCB();
     void sensorCB(const std_msgs::Float32ConstPtr&);
     void visionCB(const geometry_msgs::PointStampedConstPtr&);
+    void setDataSource(std::string);
 
 };
 #endif // UPWARD_PID_SERVER_H

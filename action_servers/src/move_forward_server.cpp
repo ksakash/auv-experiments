@@ -1,8 +1,10 @@
 #include <move_forward_server.h>
 
-moveForward::moveForward(double angle_, int pwm_): upwardPIDClient("upwardPID"), anglePIDClient("anglePID"), sidewardPIDClient("sidewardPID") {
+moveForward::moveForward(int pwm_): upwardPIDClient_sensor_("upwardPID/sensor"), anglePIDClient_sensor_("anglePID/sensor"),
+                                    sidewardPIDClient_("sidewardPID"), upwardPIDClient_vision_("upwardPID/vision"), 
+                                    anglePIDClient_vision_("anglePID/vision")
+{
     spin_thread = new boost::thread(boost::bind(&moveForward::spinThread, this));
-    angle = angle_;
 
     nh.setParam("/pwm_forward_right", pwm_);
     nh.setParam("/pwm_forward_left", pwm_);
@@ -15,34 +17,70 @@ moveForward::~moveForward() {
 void moveForward::setActive(bool status) {
     if (status == true) {
         ROS_INFO("Waiting for sidewardPID server to start.");
-        sidewardPIDClient.waitForServer();
+        sidewardPIDClient_.waitForServer();
 
         ROS_INFO("sidewardPID server started, sending goal.");
         sideward_PID_goal.target_distance = 0;
-        sidewardPIDClient.sendGoal(sideward_PID_goal);
+        sidewardPIDClient_.sendGoal(sideward_PID_goal);
 
-        ROS_INFO("Waiting for sidewardPID server to start.");
-        upwardPIDClient.waitForServer();
+        if (upward_type_ == "VISION") {
+            ROS_INFO("Waiting for upwardPID/vision server to start.");
+            upwardPIDClient_vision_.waitForServer();
 
-        ROS_INFO("upwardPID server started, sending goal.");
-        upward_PID_goal.target_depth = 0;
-        upwardPIDClient.sendGoal(upward_PID_goal);
+            ROS_INFO("upwardPID/vision server started, sending goal.");
+            upward_PID_goal.target_depth = depth;
+            upwardPIDClient_vision_.sendGoal(upward_PID_goal);
+        }
+        else if (upward_type_ == "SENSOR") {
+            ROS_INFO("Waiting for upwardPID server to start.");
+            upwardPIDClient_sensor_.waitForServer();
 
-        ROS_INFO("Waiting for sidewardPID server to start.");
-        anglePIDClient.waitForServer();
+            ROS_INFO("upwardPID server started, sending goal.");
+            upward_PID_goal.target_depth = depth;
+            upwardPIDClient_sensor_.sendGoal(upward_PID_goal);
+        }
 
-        ROS_INFO("sidewardPID server started, sending goal.");
-        angle_PID_goal.target_angle = angle;
-        anglePIDClient.sendGoal(angle_PID_goal);
+        if (angle_type_ == "VISION") {
+            ROS_INFO("Waiting for anglePID server to start.");
+            anglePIDClient_vision_.waitForServer();
+
+            ROS_INFO("anglePID server started, sending goal.");
+            angle_PID_goal.target_angle = angle;
+            anglePIDClient_vision_.sendGoal(angle_PID_goal);
+        }
+        else if (angle_type_ == "SENSOR") {
+            ROS_INFO("Waiting for anglePID server to start.");
+            anglePIDClient_sensor_.waitForServer();
+
+            ROS_INFO("anglePID server started, sending goal.");
+            angle_PID_goal.target_angle = angle;
+            anglePIDClient_sensor_.sendGoal(angle_PID_goal);
+        }
+
     }
 
     if (status == false) {
-        sidewardPIDClient.cancelGoal();
-        upwardPIDClient.cancelGoal();
-        anglePIDClient.cancelGoal();
+        sidewardPIDClient_.cancelGoal();
+        upwardPIDClient_sensor_.cancelGoal();
+        upwardPIDClient_vision_.cancelGoal();
+        anglePIDClient_sensor_.cancelGoal();
+        anglePIDClient_vision_.cancelGoal();
     }
 }   
 
 void moveForward::spinThread() {
     ros::spin();
+}
+
+void moveForward::setReferenceAngle(double angle_) {
+    angle = angle_;
+}
+
+void moveForward::setReferenceDepth(double depth_) {
+    depth = depth_;
+}
+
+void moveForward::setDataSource(std::string angle_type, std::string upward_type) {
+    angle_type_ = angle_type;
+    upward_type_ = upward_type;
 }

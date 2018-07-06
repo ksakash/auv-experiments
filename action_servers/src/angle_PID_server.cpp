@@ -84,3 +84,6 @@ void anglePIDAction::visionCB(const geometry_msgs::Pose2DConstPtr &msg) {
     nh_.setParam("/pwm_sideward_back_turn", -1*angle.getPWM());
 }
 
+void anglePIDAction::setDataSource(std::string type_) {
+    type = type_;
+}
