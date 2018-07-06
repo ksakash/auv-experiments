@@ -1,6 +1,6 @@
 #include <straight_server.h>
 
-moveStraight::moveStraight(int pwm_): anglePIDClient("anglePID") {
+moveStraight::moveStraight(int pwm_): anglePIDClient("turnPID/sensor") {
     spin_thread = new boost::thread(boost::bind(&moveStraight::spinThread, this));
 
     nh.setParam("/pwm_forward_right", pwm_);

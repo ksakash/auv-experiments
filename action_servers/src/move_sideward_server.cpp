@@ -1,6 +1,6 @@
 #include <move_sideward_server.h>
 
-moveSideward::moveSideward(int pwm_): anglePIDClient("anglePID") {
+moveSideward::moveSideward(int pwm_): anglePIDClient("turnPID/sensor") {
     spin_thread = new boost::thread(boost::bind(&moveSideward::spinThread, this));
     sub_ = nh.subscribe("/varun/sensors/imu/yaw", 1, &moveSideward::imuAngleCB, this);
     

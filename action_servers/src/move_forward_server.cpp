@@ -1,8 +1,8 @@
 #include <move_forward_server.h>
 
-moveForward::moveForward(int pwm_): upwardPIDClient_sensor_("upwardPID/sensor"), anglePIDClient_sensor_("anglePID/sensor"),
+moveForward::moveForward(int pwm_): upwardPIDClient_sensor_("upwardPID/sensor"), anglePIDClient_sensor_("turnPID/sensor"),
                                     sidewardPIDClient_("sidewardPID"), upwardPIDClient_vision_("upwardPID/vision"), 
-                                    anglePIDClient_vision_("anglePID/vision")
+                                    anglePIDClient_vision_("turnPID/vision")
 {
     spin_thread = new boost::thread(boost::bind(&moveForward::spinThread, this));
     angle_sub_ = nh.subscribe("/varun/sensors/imu/yaw", 1, &moveForward::imuAngleCB, this);
