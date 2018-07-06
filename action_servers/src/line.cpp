@@ -1,9 +1,8 @@
 #include <line.h>
 
-lineTask::lineTask(double angle_): move_straight_(angle_, 100), sidewardPIDClient("sidewardPID"), anglePIDClient("anglePID"), move_forward_(angle_, 150) {
-    spin_thread = new boost::thread(boost::bind(&moveSideward::spinThread, this));
-    sub_ = nh_.subscribe("/line_task/line_coordinates", 1, &lineTask::angleCB);
-    angle = angle_;
+lineTask::lineTask(): move_straight_(100), sidewardPIDClient("sidewardPID"), anglePIDClient("anglePID"), move_forward_(150) {
+    spin_thread = new boost::thread(boost::bind(&lineTask::spinThread, this));
+    sub_ = nh_.subscribe("/line_task/line_coordinates", 1, &lineTask::angleCB, this);
     move_forward_.setDataSource("VISION", "SENSOR");
 }
 
@@ -13,7 +12,6 @@ lineTask::~lineTask() {
 
 void lineTask::setActive(bool value) {
     if (value) {
-        move_straight_(angle, 100);
         move_straight_.setActive(true);
         bool line_detected_signal_ = false;
         bool target_acheived_ = false;
@@ -33,7 +31,7 @@ void lineTask::setActive(bool value) {
         anglePIDClient.waitForServer();
 
         ROS_INFO("anglePID server started, sending goal.");
-        angle_PID_goal.target_distance = 0;
+        angle_PID_goal.target_angle = 0;
         anglePIDClient.sendGoal(angle_PID_goal);
 
         while(!target_acheived_) {
@@ -53,4 +51,8 @@ void lineTask::setActive(bool value) {
 
 void lineTask::angleCB(const geometry_msgs::Pose2D::ConstPtr &_msg) {
     angle = _msg->theta;
+}
+
+void lineTask::spinThread() {
+    ros::spin();
 }

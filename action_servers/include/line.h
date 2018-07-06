@@ -5,10 +5,11 @@
 
 #include <action_servers/sidewardPIDAction.h>
 #include <action_servers/anglePIDAction.h>
+#include <action_servers/upwardPIDAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 
-#include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/Pose2D.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
@@ -21,14 +22,15 @@
 
 class lineTask {
 public:
-    lineTask(double);
+    lineTask();
     ~lineTask();
     void setActive(bool);
     void angleCB(const geometry_msgs::Pose2D::ConstPtr &_msg);
+    void spinThread();
 
 private:
     actionlib::SimpleActionClient<action_servers::sidewardPIDAction> sidewardPIDClient;
-    actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDAction;
+    actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;
     moveForward move_forward_;
     moveStraight move_straight_;
     ros::Subscriber sub_;

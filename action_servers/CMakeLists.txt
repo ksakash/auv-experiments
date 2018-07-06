@@ -161,6 +161,9 @@ target_link_libraries(singleBuoy moveStraight moveForward moveSideward ${catkin_
 add_library(buoy SHARED src/buoy.cpp include/buoy.h)
 target_link_libraries(buoy singleBuoy moveSideward ${catkin_LIBRARIES})
 
+add_library(line SHARED src/line.cpp include/line.h)
+target_link_libraries(line moveStraight moveForward upwardPIDServer anglePIDServer sidewardPIDServer ${catkin_LIBRARIES})
+
 add_executable(pwm_publisher src/pwm_publisher.cpp)
 target_link_libraries(pwm_publisher ${catkin_LIBRARIES})
 
@@ -168,7 +171,7 @@ add_executable(motion_server src/motion_server.cpp)
 target_link_libraries(motion_server sidewardPIDServer upwardPIDServer anglePIDServer forwardPIDServer ${catkin_LIBRARIES})
 
 add_executable(master src/master.cpp)
-target_link_libraries(master buoy ${catkin_LIBRARIES})
+target_link_libraries(master buoy line ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
