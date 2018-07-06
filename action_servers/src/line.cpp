@@ -2,7 +2,6 @@
 
 lineTask::lineTask(): move_straight_(100), sidewardPIDClient("sidewardPID"), anglePIDClient("turnPID/vision"), move_forward_(150) {
     spin_thread = new boost::thread(boost::bind(&lineTask::spinThread, this));
-    sub_ = nh_.subscribe("/line_task/line_coordinates", 1, &lineTask::angleCB, this);
     move_forward_.setDataSource("VISION", "SENSOR");
 }
 
@@ -47,10 +46,6 @@ void lineTask::setActive(bool value) {
         sidewardPIDClient.cancelGoal();
         move_forward_.setActive(false);
     }
-}
-
-void lineTask::angleCB(const geometry_msgs::Pose2D::ConstPtr &_msg) {
-    angle = _msg->theta;
 }
 
 void lineTask::spinThread() {

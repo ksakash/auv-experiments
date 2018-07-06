@@ -25,7 +25,6 @@ public:
     lineTask();
     ~lineTask();
     void setActive(bool);
-    void angleCB(const geometry_msgs::Pose2D::ConstPtr &_msg);
     void spinThread();
 
 private:
@@ -33,13 +32,11 @@ private:
     actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient;
     moveForward move_forward_;
     moveStraight move_straight_;
-    ros::Subscriber sub_;
     ros::NodeHandle nh_;
     double angle;
     boost::thread* spin_thread;
     action_servers::sidewardPIDGoal sideward_PID_goal;
     action_servers::upwardPIDGoal upward_PID_goal;
     action_servers::anglePIDGoal angle_PID_goal;
-
 };
 #endif // LINE_H
