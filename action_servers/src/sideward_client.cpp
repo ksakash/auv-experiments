@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
-#include <action_servers/anglePIDAction.h>
+#include <action_servers/sidewardPIDAction.h>
 #include <boost/thread.hpp>
 #include <stdlib.h>
 
@@ -15,7 +15,7 @@ int main (int argc, char **argv)
   ros::init(argc, argv, "simple_client");
 
   // create the action client
-  actionlib::SimpleActionClient<action_servers::anglePIDAction> ac("anglePID/sensor");
+  actionlib::SimpleActionClient<action_servers::sidewardPIDAction> ac("sidewardPID");
   boost::thread spin_thread(&spinThread);
 
   ROS_INFO("Waiting for action server to start.");
@@ -23,12 +23,12 @@ int main (int argc, char **argv)
 
   ROS_INFO("Action server started, sending goal.");
   // send a goal to the action
-  action_servers::anglePIDGoal goal;
-  goal.target_angle = atof(argv[1]);
+  action_servers::sidewardPIDGoal goal;
+  goal.target_distance = atof(argv[1]);
   ac.sendGoal(goal);
 
   //wait for the action to return
-  bool finished_before_timeout = ac.waitForResult(ros::Duration(30.0));
+  bool finished_before_timeout = ac.waitForResult(ros::Duration(40.0));
 
   if (finished_before_timeout)
   {
