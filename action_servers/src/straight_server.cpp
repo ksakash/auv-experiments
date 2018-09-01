@@ -6,7 +6,7 @@ moveStraight::moveStraight(int pwm_): anglePIDClient("turnPID/sensor") {
     nh.setParam("/pwm_forward_right", pwm_);
     nh.setParam("/pwm_forward_left", pwm_);
 
-    sub_ = nh.subscribe("/varun/sensors/imu/yaw", 1, &moveStraight::imuAngleCB, this);
+    sub_ = nh.subscribe("/varun/sensors/yaw", 1, &moveStraight::imuAngleCB, this);
 }
 
 moveStraight::~moveStraight() {

@@ -179,6 +179,12 @@ target_link_libraries(master buoy line gate ${catkin_LIBRARIES})
 add_executable(angleClient src/simple_client.cpp)
 target_link_libraries(angleClient ${catkin_LIBRARIES})
 
+add_executable(forwardClient src/forward_client.cpp)
+target_link_libraries(forwardClient ${catkin_LIBRARIES})
+
+add_executable(sidewardClient src/sideward_client.cpp)
+target_link_libraries(sidewardClient ${catkin_LIBRARIES})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

@@ -34,8 +34,8 @@ public:
     ~anglePIDAction();
     void goalCB();
     void preemptCB();
-    void sensorCB(const std_msgs::Float32ConstPtr&);
-    void visionCB(const geometry_msgs::Pose2DConstPtr&);
+    void callBack(const std_msgs::Float32ConstPtr&);
+    // void visionCB(const geometry_msgs::Pose2DConstPtr&);
     void setDataSource(std::string);
 
 };

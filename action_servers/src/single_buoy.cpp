@@ -6,20 +6,42 @@ singleBuoy::singleBuoy(): move_forward_(150), move_sideward_(100), move_straight
 singleBuoy::~singleBuoy() {}
 
 void singleBuoy::setActive(bool status) {
-    move_forward_.setDataSource("SENSOR", "VISION");
-    move_forward_.setActive(true);
+    // move_forward_.setDataSource("SENSOR", "VISION");
+    // move_forward_.setActive(true);
+
+    // move_straight_.setActive(true);
+
+    actionlib::SimpleActionClient<action_servers::sidewardPIDAction> sidewardPIDClient("sidewardPID");    
+    action_servers::sidewardPIDGoal sideward_PID_goal;
+
+    ROS_INFO("Waiting for sidewardPID server to start.");
+    sidewardPIDClient.waitForServer();
+
+    ROS_INFO("sidewardPID server started, sending goal.");
+    sideward_PID_goal.target_distance = 0;
+    sidewardPIDClient.sendGoal(sideward_PID_goal);
+
+    actionlib::SimpleActionClient<action_servers::anglePIDAction> anglePIDClient("anglePID");    
+    action_servers::anglePIDGoal angle_PID_goal;
+
+    ROS_INFO("Waiting for anglePID server to start.");
+    anglePIDClient.waitForServer();
+
+    ROS_INFO("anglePID server started, sending goal.");
+    angle_PID_goal.target_angle = 0;
+    anglePIDClient.sendGoal(angle_PID_goal);
 
     while(forward_distance_ >= 60) {
         continue;
     }
-    move_forward_.setActive(false);
-
-    move_straight_.setActive(true);
-    ros::Duration(6).sleep();
-    move_straight_.setActive(false);
-    move_straight_.setActive(true);
-    ros::Duration(10).sleep();
-    move_straight_.setActive(false);
+    // move_forward_.setActive(false);
+    anglePIDClient.cancelGoal();
+    // move_straight_.setActive(true);
+    // ros::Duration(6).sleep();
+    // move_straight_.setActive(false);
+    // move_straight_.setActive(true);
+    // ros::Duration(10).sleep();
+    // move_straight_.setActive(false);
 
     ROS_INFO("Waiting for action server to start.");
     forwardPIDClient.waitForServer();

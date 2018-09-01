@@ -28,6 +28,7 @@ public:
 
 private:
     actionlib::SimpleActionClient<action_servers::forwardPIDAction> forwardPIDClient;
+    
     moveForward move_forward_;
     moveSideward move_sideward_;
     moveStraight move_straight_;
